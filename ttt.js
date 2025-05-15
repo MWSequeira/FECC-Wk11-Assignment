@@ -25,10 +25,11 @@ let winsCombo = [
     [2, 4, 6] // diag top right to bottom left
 ]
 
-// Game tracking
+// Game tracking -- starting state
 let turn = "X"; // or "O"
-let winner = false;
-let message = "keep playing";
+let winner = false; // no winner yet
+let message = "keep playing"; // no winner yet
+showMessage(changeMessage(winner)); // start with the initial message
 
 // state functions
 function changeTurn () {
@@ -41,6 +42,20 @@ function changeTurn () {
     }
     return turn;
 } 
+
+function checkForEnd (board) {
+    let sum = 0;
+    for (let i = 0; i < board.length; i++) {
+        if (board[i] === "X" || board[i] === "O") {
+            sum = sum + 1; // if the square is filled, add one.
+        }
+    }
+    if (sum === 9) {
+        return true
+    } else {
+        return false;
+    }
+}
 
 function checkForWin (turn) {
     let i = 0
@@ -55,53 +70,58 @@ function checkForWin (turn) {
     return winner;
 }
 
-// EVENT LISTENERS
-// link the squares to the board array
-for (let i = 0; i < board.length; i++) {
-    board[i] = document.getElementById(`sq${i+1}`)
+function changeMessage (winner){
+    if (winner === true) {
+        message = `Winner: ${turn}!`
+    }
+    return message;
 }
 
 
-// function selectSquare () {
-    
-// }
+// EVENT LISTENERS
+
+// link the squares to the board array
+let squares = [];
+for (let i = 0; i < board.length; i++) {
+    squares.push(document.getElementById(`sq${i}`));
+}
+
+function selectSquare (square) {
+    showMessage(message);
+    if (board[square] !== "X" && board[square] !== "O") {
+        board[square] = turn; // put an X or O in the board array
+        squares[square].textContent = turn; // display the X or O
+    } else {
+        showMessage("Square Take. Pick Another.")
+        return board; // immediately exit this function if the square is already taken
+    }
+        
+    if (checkForWin(turn) === true) {
+        changeMessage(checkForWin(turn));
+        showMessage(message);
+    } 
+
+    if (checkForEnd(board) === true) {
+        endOfGame();
+    }
+
+    changeTurn();
+
+    return board;
+}
+
+
 
 // RENDERING FUNCTIONS
-function showMessage() {
+function showMessage(message) {
     let currentMessage = document.getElementById("message");
     currentMessage.textContent = message;
 }
 
-
-
-
-
-// PLAYGROUND
-
-// GAME BOARD
-// let top = ["left", "middle", "right"];
-// let mid = ["left", "middle", "right"];
-// let bot = ["left", "middle", "right"]; 
-
-// function checkForWin (turn) {
-//     for (let i = 0; i < 3; i++){
-//      if (top[i] === turn && mid[i] === turn && bot [i] === turn) {
-//          message = `Player ${turn} wins!`;
-//      }
-//     }
-//     if (top [0] === turn && top[1] === turn && top[2] === turn) {
-//      message = `Player ${turn} wins!`;
-//     }
-//     if (mid [0] === turn && mid[1] === turn && mid[2] === turn) {
-//      message = `Player ${turn} wins!`;
-//     }
-//     if (bot [0] === turn && bot === turn && bot === turn) {
-//      message = `Player ${turn} wins!`;
-//     }
-//     if (top[0] === turn && mid[1] === turn && bot[2] === turn) {
-//      message = `Player ${turn} wins!`;
-//     }
-//     if (top[2] === turn && mid[1] === turn && bot[0] === turn) {
-//      message = `Player ${turn} wins!`;
-//     }
-//  }
+function endOfGame() {
+    message = "End of Game";
+    showMessage(message);
+    let button = document.createElement("button")
+    button.textContent = "Play Again";
+    button.appendChild(button);
+}
