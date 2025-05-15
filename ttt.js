@@ -121,7 +121,16 @@ function showMessage(message) {
 function endOfGame() {
     message = "End of Game";
     showMessage(message);
-    let button = document.createElement("button")
-    button.textContent = "Play Again";
-    button.appendChild(button);
+}
+    
+
+function resetGame () {
+    board = [0, 1, 2, 3, 4, 5, 6, 7, 8]
+    for (let i = 0; i < board.length; i++) {
+        squares[i].textContent = "♦️";
+    }
+    turn = "X"; // or "O"
+    winner = false; // no winner yet
+    message = "keep playing"; // no winner yet
+    showMessage(changeMessage(winner));
 }
