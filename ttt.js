@@ -140,7 +140,10 @@ function resetGame () {
         squares[i].textContent = "♦️";
     }
     turn = "X"; // or "O"
+    turnMessage = `It's ${turn}'s turn.`; 
+    showTurn(turnMessage); // show whose turn it is 
+
     winner = false; // no winner yet
-    message = "keep playing"; // no winner yet
-    showMessage(changeMessage(winner));
+    message = `Start Playing.`; // no winner yet
+    showMessage(changeMessage(winner)); // start with the initial message
 }
