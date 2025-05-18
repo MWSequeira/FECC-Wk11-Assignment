@@ -27,8 +27,11 @@ let winsCombo = [
 
 // Game tracking -- starting state
 let turn = "X"; // or "O"
+let turnMessage = `It's ${turn}'s turn.`; 
+showTurn(turnMessage); // show whose turn it is 
+
 let winner = false; // no winner yet
-let message = "keep playing"; // no winner yet
+let message = `Start Playing.`; // no winner yet
 showMessage(changeMessage(winner)); // start with the initial message
 
 // state functions
@@ -40,6 +43,7 @@ function changeTurn () {
             turn = "X"
         }
     }
+    turnMessage = `It's ${turn}'s turn.`; 
     return turn;
 } 
 
@@ -70,10 +74,10 @@ function checkForWin (turn) {
     return winner;
 }
 
-function changeMessage (winner){
+function changeMessage (winner) {
     if (winner === true) {
         message = `Winner: ${turn}!`
-    }
+    } 
     return message;
 }
 
@@ -87,12 +91,13 @@ for (let i = 0; i < board.length; i++) {
 }
 
 function selectSquare (square) {
+    message = `Keep Playing.`
     showMessage(message);
     if (board[square] !== "X" && board[square] !== "O") {
         board[square] = turn; // put an X or O in the board array
         squares[square].textContent = turn; // display the X or O
     } else {
-        showMessage("Square Take. Pick Another.")
+        showMessage(`Square Taken. Pick Another.`)
         return board; // immediately exit this function if the square is already taken
     }
         
@@ -101,12 +106,13 @@ function selectSquare (square) {
         showMessage(message);
     } 
 
-    if (checkForEnd(board) === true) {
+    if (checkForEnd(board) === true && winner === false) {
         endOfGame();
     }
 
     changeTurn();
-
+   
+    showTurn(turnMessage);
     return board;
 }
 
@@ -118,11 +124,15 @@ function showMessage(message) {
     currentMessage.textContent = message;
 }
 
+function showTurn(turnMessage) {
+    let currentTurnMessage = document.getElementById("turn");
+    currentTurnMessage.textContent = turnMessage;
+}
+
 function endOfGame() {
     message = "End of Game";
     showMessage(message);
 }
-    
 
 function resetGame () {
     board = [0, 1, 2, 3, 4, 5, 6, 7, 8]
